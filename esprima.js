@@ -2395,7 +2395,7 @@ parseYieldExpression: true
             throwErrorTolerant(options.name, Messages.StrictParamName);
         }
         if (state.yieldAllowed && !state.yieldFound) {
-            throwErrorTolerant({}, Messages.NoYieldInGenerator);
+            // throwErrorTolerant({}, Messages.NoYieldInGenerator);
         }
         strict = previousStrict;
         state.yieldAllowed = previousYieldAllowed;
@@ -4443,7 +4443,7 @@ parseYieldExpression: true
             throwErrorTolerant(tmp.stricted, message);
         }
         if (state.yieldAllowed && !state.yieldFound) {
-            throwErrorTolerant({}, Messages.NoYieldInGenerator);
+            // throwErrorTolerant({}, Messages.NoYieldInGenerator);
         }
         strict = previousStrict;
         state.yieldAllowed = previousYieldAllowed;
@@ -4503,7 +4503,7 @@ parseYieldExpression: true
             throwErrorTolerant(tmp.stricted, message);
         }
         if (state.yieldAllowed && !state.yieldFound) {
-            throwErrorTolerant({}, Messages.NoYieldInGenerator);
+            // throwErrorTolerant({}, Messages.NoYieldInGenerator);
         }
         strict = previousStrict;
         state.yieldAllowed = previousYieldAllowed;
@@ -4518,7 +4518,7 @@ parseYieldExpression: true
         expectKeyword('yield');
 
         if (!state.yieldAllowed) {
-            throwErrorTolerant({}, Messages.IllegalYield);
+            // throwErrorTolerant({}, Messages.IllegalYield);
         }
 
         delegateFlag = false;
