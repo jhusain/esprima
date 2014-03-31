@@ -2676,10 +2676,6 @@ parseYieldExpression: true, parseAwaitExpression: true
 
         type = lookahead.type;
 
-        if (matchAsyncFuncExprOrDecl()) {
-            return parseFunctionExpression();
-        }
-
         if (type === Token.Identifier) {
             marker = markerCreate();
             return markerApply(marker, delegate.createIdentifier(lex().value));
@@ -4819,10 +4815,6 @@ parseYieldExpression: true, parseAwaitExpression: true
             default:
                 return parseStatement();
             }
-        }
-
-        if (matchAsyncFuncExprOrDecl()) {
-            return parseFunctionDeclaration();
         }
 
         if (matchModuleDeclaration()) {
