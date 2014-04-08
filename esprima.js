@@ -2244,8 +2244,15 @@ parseYieldExpression: true, parseAwaitExpression: true
     }
 
     function matchAsync() {
-        return (strict ? matchKeyword : matchContextualKeyword)('async') &&
-            !peekLineTerminator();
+        var backtrackToken = lookahead, matches = false;
+
+        if ((strict ? matchKeyword : matchContextualKeyword)('async')) {
+            lex(); // Make sure peekLineTerminator() starts after 'async'.
+            matches = !peekLineTerminator();
+            rewind(backtrackToken); // Revert the lex().
+        }
+
+        return matches;
     }
 
     function matchAwait() {
