@@ -141,6 +141,7 @@ parseYieldExpression: true, parseAwaitExpression: true
         ExpressionStatement: 'ExpressionStatement',
         ForInStatement: 'ForInStatement',
         ForOfStatement: 'ForOfStatement',
+        ForOnStatement: 'ForOnStatement',        
         ForStatement: 'ForStatement',
         FunctionDeclaration: 'FunctionDeclaration',
         FunctionExpression: 'FunctionExpression',
@@ -1684,6 +1685,15 @@ parseYieldExpression: true, parseAwaitExpression: true
         createForOfStatement: function (left, right, body) {
             return {
                 type: Syntax.ForOfStatement,
+                left: left,
+                right: right,
+                body: body
+            };
+        },
+
+        createForOnStatement: function (left, right, body) {
+            return {
+                type: Syntax.ForOnStatement,
                 left: left,
                 right: right,
                 body: body
@@ -3788,6 +3798,7 @@ parseYieldExpression: true, parseAwaitExpression: true
 
     function parseForStatement(opts) {
         var init, test, update, left, right, body, operator, oldInIteration,
+            isForOn,
             marker = markerCreate();
         init = test = update = null;
         expectKeyword('for');
@@ -3808,7 +3819,7 @@ parseYieldExpression: true, parseAwaitExpression: true
                 state.allowIn = true;
 
                 if (init.declarations.length === 1) {
-                    if (matchKeyword('in') || matchContextualKeyword('of')) {
+                    if (matchKeyword('in') || matchContextualKeyword('of') || (isForOn = matchContextualKeyword('on'))) {
                         operator = lookahead;
                         if (!((operator.value === 'in' || init.kind !== 'var') && init.declarations[0].init)) {
                             lex();
@@ -3823,7 +3834,7 @@ parseYieldExpression: true, parseAwaitExpression: true
                 init = parseExpression();
                 state.allowIn = true;
 
-                if (matchContextualKeyword('of')) {
+                if (matchContextualKeyword('of') || (isForOn = matchContextualKeyword('on'))) {
                     operator = lex();
                     left = init;
                     right = parseExpression();
@@ -3875,7 +3886,12 @@ parseYieldExpression: true, parseAwaitExpression: true
         if (operator.value === 'in') {
             return markerApply(marker, delegate.createForInStatement(left, right, body));
         }
-        return markerApply(marker, delegate.createForOfStatement(left, right, body));
+        if (isForOn) {
+            return markerApply(marker, delegate.createForOnStatement(left, right, body));
+        }
+        else {
+            return markerApply(marker, delegate.createForOfStatement(left, right, body));   
+        }
     }
 
     // 12.7 The continue statement
